@@ -1,0 +1,52 @@
+pipeline {
+  environment {
+    registry = "sa-saopaulo-1.ocir.io/groavogpbneu/"
+    repository = "api-portalcrm"
+    dockerImageTag = ""
+  }
+  agent any
+  stages {
+    stage('Checkout Source') {
+      steps {
+        git credentialsId: 'github_paguemenos', url: 'https://github.com/opsteamhub/app-jenkins.git', branch: 'staging'               
+      }
+    }
+    stage('Build image') {
+      environment {
+        version = """${sh (script: 'cat package.json | grep version | head -1 | awk -F: \'{ print $2 }\' | sed \'s/[",]//g\'', returnStdout: true)}""" 
+      }
+      steps{
+        script {
+          dockerImageTag = "staging${version.trim()}"
+          
+          kubernetes.pod('kaniko') {
+            container('kaniko') {
+              sh '''
+              /kaniko/executor --dockerfile `pwd`/Dockerfile \
+                  --context `pwd` \
+                  --destination ${registry}${repository}:${dockerImageTag} \
+                  --insecure --skip-tls-verify
+              '''
+            }
+          }
+        }
+      }
+    }
+    
+    stage('Push Image') {
+      steps{
+        script {
+          // Kaniko already pushes the image during build, so this stage can be skipped or used for verification
+          echo "Image pushed: ${registry}${repository}:${dockerImageTag}"
+        }
+      }
+    }
+    stage('Deploy App') {
+      steps {
+        script {
+          kubernetesDeploy(configs: repository + ".yaml", kubeconfigId: "kubeconfig_homolog")
+        }
+      }
+    }
+  }
+}
