@@ -8,7 +8,7 @@ pipeline {
   stages {
     stage('Checkout Source') {
       steps {
-        git credentialsId: 'github_paguemenos', url: 'https://github.com/opsteamhub/app-jenkins.git', branch: 'refs/heads/staging'               
+        git credentialsId: 'github_paguemenos', url: 'https://github.com/opsteamhub/app-jenkins.git', branch: 'main'               
       }
     }
     stage('Build and Push Image with Kaniko') {
