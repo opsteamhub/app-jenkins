@@ -18,7 +18,9 @@ pipeline {
       }
       steps {
         script {
-          sh /kaniko/executor --context $WORKSPACE --dockerfile $WORKSPACE/Dockerfile --destination ${registry}/${repository}:staging${version}
+          sh  """ 
+            /kaniko/executor --context $WORKSPACE --dockerfile $WORKSPACE/Dockerfile --destination ${registry}/${repository}:staging${version}
+          """  
          
         }
       }
