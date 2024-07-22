@@ -19,7 +19,7 @@ pipeline {
       steps {
           container('kaniko') {
               sh '''executor \
-                    --destination="${registry}${repository}:staging${version.trim()}"
+                    --destination="${registry}${repository}:staging${version}"
                     --context=$WORKSPACE
               '''
       }
