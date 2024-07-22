@@ -13,16 +13,15 @@ pipeline {
     }
     stage('Build image') {
       agent { label 'kaniko' }
-      container('kaniko')
       steps {
         script {
           // Captura a versão do package.json
           def version = sh(script: "cat package.json | grep version | head -1 | awk -F: '{ print \$2 }' | sed 's/[\",]//g'", returnStdout: true).trim()
           
           // Constrói a imagem Docker usando Kaniko
-          sh """
+          sh '''#!/busybox/sh
             /kaniko/executor --context $WORKSPACE --dockerfile $WORKSPACE/Dockerfile --destination ${registry}/${repository}:staging${version}
-          """
+          '''
           
           // Define a variável dockerImage
           dockerImage = "${registry}/${repository}:staging${version}"
