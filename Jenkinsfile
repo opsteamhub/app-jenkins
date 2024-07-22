@@ -12,15 +12,14 @@ pipeline {
       }
     }
     stage('Build image') {
+      agent { label 'kaniko' }
       environment {
         version = sh(script: "cat package.json | grep version | head -1 | awk -F: '{ print \$2 }' | sed 's/[\",]//g'", returnStdout: true).trim()
       }
       steps {
-        agent { label 'kaniko' } {
-          sh '''#!/bin/bash
-          executor --context $WORKSPACE --dockerfile $WORKSPACE/Dockerfile --destination ${registry}/${repository}:staging${version}
-          '''
-        }
+        sh '''#!/bin/bash
+        executor --context $WORKSPACE --dockerfile $WORKSPACE/Dockerfile --destination ${registry}/${repository}:staging${version}
+        '''
       }
     }
     stage('Push Image') {
