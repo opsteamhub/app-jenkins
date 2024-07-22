@@ -19,7 +19,7 @@ pipeline {
           def version = sh(script: "cat package.json | grep version | head -1 | awk -F: '{ print \$2 }' | sed 's/[\",]//g'", returnStdout: true).trim()
           
           // Constrói a imagem Docker usando Kaniko
-          sh '''#!/busybox/sh
+          sh '''
             /kaniko/executor --context $WORKSPACE --dockerfile $WORKSPACE/Dockerfile --destination ${registry}/${repository}:staging${version}
           '''
           
