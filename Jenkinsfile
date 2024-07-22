@@ -13,6 +13,7 @@ pipeline {
     }
     stage('Build image') {
       agent { label 'kaniko' }
+      container('kaniko')
       steps {
         script {
           // Captura a versão do package.json
