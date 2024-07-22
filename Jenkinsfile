@@ -18,7 +18,8 @@ pipeline {
       }
       steps {
         script {
-          dockerImage = docker.build("${registry}${repository}:staging${version.trim()}", ". " + "--network host")
+          sh /kaniko/executor --context $WORKSPACE --dockerfile $WORKSPACE/Dockerfile --destination ${registry}/${repository}:staging${version}
+         
         }
       }
     }
