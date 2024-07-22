@@ -7,7 +7,7 @@ pipeline {
   stages {
     stage('Checkout Source') {
       steps {
-        git credentialsId: 'github_paguemenos', url: 'Jenkinsfile', branch: 'main'
+        git credentialsId: 'github_paguemenos', url: 'https://github.com/paguemenos/api-portalcrm.git', branch: 'staging'
       }
     }
     stage('Build and Push to Registry') {
