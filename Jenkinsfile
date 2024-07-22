@@ -16,7 +16,7 @@ pipeline {
         version = sh(script: "cat package.json | grep version | head -1 | awk -F: '{ print \$2 }' | sed 's/[\",]//g'", returnStdout: true).trim()
       }
       steps {
-        container('kaniko') {
+        agent { label 'kaniko' } {
           sh '''#!/bin/bash
           executor --context $WORKSPACE --dockerfile $WORKSPACE/Dockerfile --destination ${registry}/${repository}:staging${version}
           '''
