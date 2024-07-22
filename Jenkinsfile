@@ -1,6 +1,6 @@
 pipeline {
   environment {
-    registry = "sa-saopaulo-1.ocir.io/groavogpbneu/"
+    registry = "faelvinicius"
     repository = "app-jenkins"
     dockerImage = ""
   }
@@ -8,7 +8,7 @@ pipeline {
   stages {
     stage('Checkout Source') {
       steps {
-        git credentialsId: 'github_paguemenos', url: 'https://github.com/opsteamhub/app-jenkins.git', branch: 'staging'               
+        git credentialsId: 'github_paguemenos', url: 'https://github.com/opsteamhub/app-jenkins.git', branch: 'main'               
       }
     }
     stage('Build image') {
